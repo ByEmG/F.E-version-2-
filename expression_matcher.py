@@ -3,31 +3,26 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tkinter import filedialog
 
+# Define labels once globally
+emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
+
+# Emotion prediction function
 def predict_emotion_from_image(image, model):
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-
-    if len(faces) == 0:
-        return None
-
-    x, y, w, h = faces[0]
-    roi = image[y:y+h, x:x+w]  # 🟢 Use original color image (not gray)
-    roi = cv2.resize(roi, (48, 48))          # Resize to match model input
-    roi = roi / 255.0                        # Normalize
-    roi = np.expand_dims(roi, axis=0)       # Add batch dimension
-
-    prediction = model.predict(roi)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
+    resized = cv2.resize(gray, (48, 48))            # Resize image
+    normalized = resized / 255.0                    # Normalize pixel values
+    reshaped = np.reshape(normalized, (1, 48, 48, 1))  # Reshape to match model input
+    prediction = model.predict(reshaped)            # Predict with model
     return np.argmax(prediction)
 
+# Compare uploaded image with live webcam feed
 def compare_uploaded_with_webcam():
-    emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
     model = load_model("model/emotion_recognition_model.h5")
 
-    # File dialog to upload image
+    # File dialog to upload an image
     upload_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.png *.jpeg")])
     if not upload_path:
-        print("No image selected.")
+        print("❌ No image selected.")
         return
 
     uploaded_image = cv2.imread(upload_path)
@@ -39,7 +34,7 @@ def compare_uploaded_with_webcam():
     uploaded_emotion = emotion_labels[uploaded_emotion_idx]
     print(f"🖼️ Uploaded emotion: {uploaded_emotion}")
 
-    # Webcam comparison
+    # Webcam feed
     cap = cv2.VideoCapture(0)
     while True:
         ret, frame = cap.read()
