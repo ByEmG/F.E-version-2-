@@ -67,7 +67,7 @@ Use `q` to quit the webcam feed.
 ## 📽️ Demo Video
 
 Video was too large to upload to GitHub.  
-🎥 View it here: [Google Drive Link to Demo.mov]([https://drive.google.com/](https://drive.google.com/file/d/1CZ6x6N809iPbfUb_zXE2p-MF4UUj4y0g/view?usp=sharing)) ← 
+🎥 View it here: [Google Drive Link to Demo.mov](https://drive.google.com/file/d/1CZ6x6N809iPbfUb_zXE2p-MF4UUj4y0g/view?usp=sharing)) ← 
 
 ---
 
